@@ -65,4 +65,19 @@ public class CustomerJDBCDataAccessService implements CustomerDAO{
         Integer count =  jdbcTemplate.queryForObject(sql, Integer.class, email);
         return count != null && count > 0;
     }
+
+    @Override
+    public void deleteCustomerById(Integer customerId) {
+
+    }
+
+    @Override
+    public boolean existsCustomerWithId(Integer id) {
+        return false;
+    }
+
+    @Override
+    public void updateCustomer(Customer update) {
+
+    }
 }

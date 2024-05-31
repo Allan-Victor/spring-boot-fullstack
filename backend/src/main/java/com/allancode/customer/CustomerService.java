@@ -2,7 +2,7 @@ package com.allancode.customer;
 
 import com.allancode.exception.DuplicateResourceException;
 import com.allancode.exception.RequestValidationException;
-import com.allancode.exception.ResourceNotFound;
+import com.allancode.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ public class CustomerService {
 
     public Customer getCustomer(Integer id){
         return customerDAO.selectCustomerById(id)
-                .orElseThrow(() -> new ResourceNotFound("customer with id does not exist"));
+                .orElseThrow(() -> new ResourceNotFoundException("customer with id does not exist"));
     }
 
     public void addCustomer(CustomerRegistrationRequest customerRegistrationRequest){
@@ -32,16 +32,18 @@ public class CustomerService {
             throw new DuplicateResourceException("Email already taken");
         }
         //add
-        customerDAO.insertCustomer(new Customer(customerRegistrationRequest.name(),
+        Customer customer = new Customer(customerRegistrationRequest.name(),
                 customerRegistrationRequest.email(),
-                customerRegistrationRequest.age()));
+                customerRegistrationRequest.age());
+
+        customerDAO.insertCustomer(customer);
 
     }
 
 
     public void removeCustomerById(Integer id){
-        if (customerDAO.existsCustomerWithId(id)){
-            throw new ResourceNotFound("Customer does not exist");
+        if (!customerDAO.existsCustomerWithId(id)){
+            throw new ResourceNotFoundException("Customer does not exist");
         }
         customerDAO.deleteCustomerById(id);
     } {
